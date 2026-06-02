@@ -1,0 +1,48 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+
+# Editor / OS
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Env (keep .env.example)
+.env
+.env.*
+!.env.example
+
+# Source assets not needed for the build (originals kept locally, root only)
+/ezgif-49cd4d678c99d1a3-jpg.zip
+/ezgif-49cd4d678c99d1a3-jpg/
+/ezgif-3ec7be4531f69f03-jpg/
+/HERO.mp4
+/Smit_Merchant_Resume.pdf
+/photo1.png
+/1.png
+/2.png
+/3.png
+/11.jpeg
+/WhatsApp Image*.jpeg
+/Smit_Merchant_Resume (1).pdf
+/ezgif-3ec7be4531f69f03-jpg.zip
+
+# Downloaded source asset packs (originals kept locally, not part of the app)
+/GitHub_Logos.zip
+/GitHub_Logos/
+/logos/

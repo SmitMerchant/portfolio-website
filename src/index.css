@@ -1,0 +1,136 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply bg-zinc-950 text-zinc-400 font-sans antialiased;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: rgba(244, 244, 245, 0.16);
+}
+
+/* Thin, neutral scrollbar */
+::-webkit-scrollbar {
+  width: 11px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #27272a;
+  border: 3px solid #09090b;
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #3f3f46;
+}
+
+@layer base {
+  h1, h2, h3, h4 {
+    @apply text-zinc-100;
+    text-wrap: balance;
+  }
+}
+
+@layer components {
+  .container-px {
+    @apply mx-auto w-full max-w-5xl px-6 sm:px-8;
+  }
+
+  /* section heading eyebrow */
+  .eyebrow {
+    @apply mb-3 block font-mono text-xs uppercase tracking-[0.18em] text-zinc-500;
+  }
+
+  /* buttons — solid + outline, subtle radius, no glow/gradient */
+  .btn-solid {
+    @apply inline-flex items-center justify-center gap-2 rounded-md bg-zinc-100 px-4 py-2 text-sm font-medium text-zinc-900 transition-colors duration-150 hover:bg-white;
+  }
+  .btn-outline {
+    @apply inline-flex items-center justify-center gap-2 rounded-md border border-zinc-700 bg-transparent px-4 py-2 text-sm font-medium text-zinc-200 transition-colors duration-150 hover:border-zinc-500 hover:bg-zinc-900;
+  }
+
+  /* inline text link */
+  .link {
+    @apply inline-flex items-center gap-1.5 text-sm text-zinc-400 transition-colors duration-150 hover:text-zinc-100;
+  }
+
+  /* small mono tag for tech labels */
+  .tag {
+    @apply inline-flex items-center rounded border border-zinc-800 px-2 py-0.5 font-mono text-xs text-zinc-400;
+  }
+
+  /* surface card */
+  .surface {
+    @apply rounded-lg border border-zinc-800 bg-zinc-900/40;
+  }
+}
+
+/* hairline divider */
+.hairline {
+  @apply border-zinc-800;
+}
+
+/* ---- Logo marquee ---- */
+.marquee-mask {
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    black 10%,
+    black 90%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    black 10%,
+    black 90%,
+    transparent 100%
+  );
+}
+.marquee {
+  overflow: hidden;
+}
+.marquee-track {
+  display: flex;
+  width: max-content;
+  flex-wrap: nowrap;
+  will-change: transform;
+}
+.marquee-track .logo-item {
+  margin: 0 2rem;
+}
+.marquee-left {
+  animation: marquee-left 48s linear infinite;
+}
+.marquee-right {
+  animation: marquee-right 48s linear infinite;
+}
+.marquee:hover .marquee-track {
+  animation-play-state: paused;
+}
+@keyframes marquee-left {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+@keyframes marquee-right {
+  from { transform: translateX(-50%); }
+  to { transform: translateX(0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .marquee-left,
+  .marquee-right {
+    animation-duration: 140s;
+  }
+}
