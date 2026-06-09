@@ -1,5 +1,5 @@
 import Navbar from './components/Navbar'
-import HeadshotSequence from './components/HeadshotSequence'
+import WindowReveal from './components/WindowReveal'
 import Hero from './components/Hero'
 import LogoMarquee from './components/LogoMarquee'
 import About from './components/About'
@@ -14,7 +14,7 @@ export default function App() {
     <div className="min-h-screen bg-zinc-950">
       <Navbar />
       <main>
-        <HeadshotSequence />
+        <WindowReveal />
         <Hero />
         <LogoMarquee />
         <About />

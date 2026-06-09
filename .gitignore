@@ -42,7 +42,12 @@ dist-ssr
 /Smit_Merchant_Resume (1).pdf
 /ezgif-3ec7be4531f69f03-jpg.zip
 
+# Local FFmpeg build (used by npm run extract-frames, not shipped with the site)
+/ffmpeg-8.1.1-essentials_build/
+
 # Downloaded source asset packs (originals kept locally, not part of the app)
 /GitHub_Logos.zip
 /GitHub_Logos/
 /logos/
+
+.vercel

@@ -35,7 +35,30 @@ Open http://localhost:5173.
 
 Sequential frames live in `public/headshot-frames/` named `ezgif-frame-001.jpg … ezgif-frame-240.jpg`. They are preloaded on mount and scrubbed via GSAP ScrollTrigger as you scroll. On mobile (`< 768px`) a single static frame is shown instead for performance.
 
-To swap in new frames, replace the files in `public/headshot-frames/` and update `FRAME_COUNT` in `src/components/HeadshotSequence.jsx`.
+### Extracting frames (FFmpeg — skip ezgif)
+
+Online tools like ezgif compress frames heavily (~800px, low JPEG quality), which makes scroll scrubbing look soft. Use the included script instead — it pulls frames at **full source resolution** with `-q:v 1` (highest JPEG quality).
+
+1. Place your source video at `HERO.mp4` in the project root (or pass a path).
+2. Run:
+
+```bash
+npm run extract-frames
+```
+
+Options:
+
+```bash
+npm run extract-frames -- path/to/video.mp4 --frames 240 --output public/headshot-frames
+```
+
+The script uses the bundled FFmpeg in `ffmpeg-8.1.1-essentials_build/` if present, otherwise falls back to a system `ffmpeg` on your PATH. Frame count defaults to 240; update `FRAME_COUNT` in `src/components/HeadshotSequence.jsx` if you change it.
+
+Manual one-liner (same quality):
+
+```bash
+ffmpeg -y -nostdin -i HERO.mp4 -vf fps=30 -frames:v 240 -q:v 1 -start_number 1 public/headshot-frames/ezgif-frame-%03d.jpg
+```
 
 ## Build & deploy
 

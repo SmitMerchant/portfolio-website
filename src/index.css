@@ -82,6 +82,83 @@ body {
   @apply border-zinc-800;
 }
 
+/* ---- Window reveal (scroll-triggered clip mask) ---- */
+.mask-word {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-weight: 700;
+  font-size: clamp(5rem, 22vw, 20rem);
+  letter-spacing: -0.04em;
+  will-change: transform;
+}
+
+/* portrait melts into the backdrop at its base */
+.portrait-blend {
+  -webkit-mask-image: linear-gradient(to bottom, black 78%, transparent 99%);
+  mask-image: linear-gradient(to bottom, black 78%, transparent 99%);
+  filter: drop-shadow(0 24px 60px rgba(0, 0, 0, 0.55)) contrast(1.03)
+    saturate(1.03);
+}
+
+/* subtle film grain over the studio backdrop */
+.grain {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+  background-size: 160px 160px;
+}
+
+.scroll-cue {
+  animation: scroll-cue 1.8s ease-in-out infinite;
+  transform-origin: top;
+}
+@keyframes scroll-cue {
+  0% { transform: scaleY(0.2); opacity: 0.2; }
+  45% { transform: scaleY(1); opacity: 1; }
+  100% { transform: scaleY(0.2); opacity: 0.2; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .scroll-cue { animation: none; }
+}
+
+/* ---- Project card 3D carousel ---- */
+.card-carousel-stage {
+  height: min(92vh, 760px);
+  padding-bottom: 3.5rem;
+  perspective: 1500px;
+  transform-style: preserve-3d;
+  overflow: visible;
+}
+.card-carousel-tilt {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+  /* diagonal lean — lifted so card bottoms stay in frame */
+  transform: rotateX(-7deg) translateY(-5%);
+}
+.card-carousel-ring {
+  position: absolute;
+  left: 50%;
+  top: 46%;
+  width: 0;
+  height: 0;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+.card-carousel-slot {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: min(90vw, 400px);
+  margin-left: calc(min(90vw, 400px) / -2);
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+}
+.card-carousel-focus {
+  transform-style: preserve-3d;
+  will-change: transform, opacity;
+}
+.card-3d-face {
+  backface-visibility: hidden;
+}
+
 /* ---- Logo marquee ---- */
 .marquee-mask {
   -webkit-mask-image: linear-gradient(

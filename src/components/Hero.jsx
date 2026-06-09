@@ -5,26 +5,20 @@ export default function Hero() {
   const scrollTo = (href) => document.querySelector(href)?.scrollIntoView({ behavior: 'smooth' })
 
   return (
-    <section id="top" className="container-px py-16 sm:py-24">
+    <section className="container-px py-20 sm:py-28">
       <div className="grid">
         <div className="animate-fade-up">
-          <p className="mb-5 inline-flex items-center gap-2 font-mono text-xs text-zinc-500">
-            <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
-            Available for AI &amp; full-stack roles
-          </p>
+          <span className="eyebrow">Introduction</span>
 
-          <h1 className="text-3xl font-semibold tracking-tight text-zinc-100 sm:text-4xl">
-            {PROFILE.name}
-          </h1>
-          <p className="mt-2 text-base text-zinc-400">
-            {PROFILE.role} &middot; {PROFILE.location}
-          </p>
+          <h2 className="max-w-2xl text-2xl font-semibold leading-snug tracking-tight text-zinc-100 sm:text-3xl">
+            I build production AI systems end to end — data pipelines, models, APIs
+            and the interfaces people actually use.
+          </h2>
 
           <p className="mt-6 max-w-xl text-[15px] leading-relaxed text-zinc-400">
-            I build production AI systems end to end — data pipelines, models, APIs and
-            the interfaces on top. Currently shipping an AI sales-intelligence platform at
-            Adtecher, with a background spanning deep learning research and full-stack
-            product engineering.
+            Currently shipping an AI sales-intelligence platform at Adtecher, with a
+            background spanning deep-learning research and full-stack product
+            engineering. Based in {PROFILE.location}.
           </p>
 
           <div className="mt-8 flex flex-wrap items-center gap-3">
