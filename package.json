@@ -5,9 +5,10 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build && node scripts/check-public-bundle.mjs",
     "preview": "vite preview",
-    "extract-frames": "node scripts/extract-frames.mjs"
+    "extract-frames": "node scripts/extract-frames.mjs",
+    "test": "node --test tests/chat.test.js"
   },
   "dependencies": {
     "framer-motion": "^11.11.17",

@@ -17,19 +17,36 @@ Dark, cinematic theme with soft purple/blue AI glow accents, a 3D AI orb, an App
 
 ```bash
 npm install
-cp .env.example .env   # then add your DeepSeek key
+cp .env.example .env   # AI stays off until server credentials and limits are ready
 npm run dev
 ```
 
 Open http://localhost:5173.
 
-## Environment variables
+## Chatbot security and setup
 
-| Variable | Description |
+The browser calls only `/api/chat`. DeepSeek credentials are server-only. The guide returns saved portfolio facts if AI is disabled, any limit is reached, or either provider is unavailable.
+
+| Server variable | Purpose |
 | --- | --- |
-| `VITE_DEEPSEEK_API_KEY` | DeepSeek API key for the floating portfolio chatbot. The site still works without it — the chatbot falls back to a polite "email me" message. |
+| `DEEPSEEK_API_KEY` | Fresh DeepSeek key, stored as a Vercel Production secret. Never use a `VITE_` prefix. |
+| `CHAT_ENABLED` | Set to `true` only after revoking the exposed key and configuring all controls. Otherwise no paid calls are made. |
+| `UPSTASH_REDIS_REST_URL` / `UPSTASH_REDIS_REST_TOKEN` | Shared Redis REST counter, with eviction and automatic paid plan upgrades disabled. |
+| `CHAT_RATE_LIMIT_SECRET` | At least 32 random characters, stored as a server secret, for hashing IPs. |
 
-> Note: the key is exposed client-side (any `VITE_*` var is). Use a key scoped/limited to this use, or proxy through a serverless function if you need it fully hidden.
+The backend fixes the model to `deepseek-flash`, disables thinking and limits output to 400 tokens. It accepts at most five messages of 1,000 characters each and trims history to a 9,000-byte total context. Redis atomically reserves requests across all instances: 5/IP/minute, 20/IP/UTC day and 30 globally/UTC day. Timeouts and failures are not refunded or retried, since the provider may already have billed them. This bounds API calls and their size; it is not a provider-enforced dollar budget, and does not cover other apps or leaked keys. UTC day limits reset at midnight UTC.
+
+The Redis global key must remain shared across deployments. Do not delete counters to recover capacity or enable eviction. If Redis is missing, full or unavailable, AI fails closed. Use the Free plan with automatic upgrades disabled to avoid counter-service overages.
+
+Vercel supplies the trusted client-IP header; a caller-supplied `x-forwarded-for` is ignored. Origin checks are only defence in depth. Numeric usage and fallback reasons appear in Vercel function logs; keys, prompts, replies and raw IPs are not logged. The UI marks fallback replies as saved information.
+
+For a complete local backend use `npx vercel dev`. Plain `npm run dev` / `npm run preview` serve the frontend only; the guide falls back to saved facts. Production secrets should not be copied into local development.
+
+Run `npm test` for mocked security regression tests (no provider charges). `npm run build` also scans public assets for key-shaped secrets and direct DeepSeek API calls.
+
+### If a key has been exposed
+
+Revoke it in DeepSeek first. Removing an environment variable or deploying new code cannot invalidate downloaded copies, browser caches or historical deployment assets. Remove `VITE_DEEPSEEK_API_KEY` from Vercel and local env files; create a fresh server-only key. Do not restore any deployment that contains the old direct-to-DeepSeek chatbot. Enable AI only after the shared controls pass verification.
 
 ## Headshot scroll sequence
 
@@ -67,7 +84,7 @@ npm run build      # outputs to dist/
 npm run preview    # preview the production build
 ```
 
-Deploy-ready for **Vercel** (see `vercel.json`). Add `VITE_DEEPSEEK_API_KEY` in the Vercel project's Environment Variables for the chatbot to go live.
+Deploy-ready for **Vercel** (see `vercel.json`). Configure the server-only variables above. Keep AI disabled until credentials and shared limits are ready.
 
 ## Project structure
 

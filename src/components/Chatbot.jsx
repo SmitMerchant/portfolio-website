@@ -1,8 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
-import { CHATBOT_SYSTEM_PROMPT } from '../data'
+import { portfolioAnswer } from '../portfolio-answer'
 import { CloseIcon, SendIcon, SparkleIcon } from './Icons'
 
-const DEEPSEEK_URL = 'https://api.deepseek.com/chat/completions'
 const SUGGESTIONS = [
   'What is Smit working on now?',
   'Summarise his AI experience',
@@ -12,7 +11,7 @@ const SUGGESTIONS = [
 const GREETING = {
   role: 'assistant',
   content:
-    "Hi — I'm a small assistant trained on Smit's background. Ask me about his experience, projects or skills.",
+    "Hi — ask me about Smit's experience, projects or skills. I can share saved portfolio information when AI replies are unavailable.",
 }
 
 export default function Chatbot() {
@@ -22,7 +21,8 @@ export default function Chatbot() {
   const [loading, setLoading] = useState(false)
   const scrollRef = useRef(null)
 
-  const apiKey = import.meta.env.VITE_DEEPSEEK_API_KEY
+  const sendingRef = useRef(false)
+  const [replyMode, setReplyMode] = useState('Portfolio guide')
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: 'smooth' })
@@ -30,57 +30,43 @@ export default function Chatbot() {
 
   const send = async (text) => {
     const content = (text ?? input).trim()
-    if (!content || loading) return
+    if (!content || content.length > 1000 || sendingRef.current) return
+    sendingRef.current = true
     setInput('')
 
     const next = [...messages, { role: 'user', content }]
     setMessages(next)
 
-    if (!apiKey) {
-      setMessages([
-        ...next,
-        {
-          role: 'assistant',
-          content:
-            "The assistant isn't configured here yet. You can reach Smit directly at smit.merchant@gmail.com.",
-        },
-      ])
-      return
-    }
-
     setLoading(true)
     try {
-      const res = await fetch(DEEPSEEK_URL, {
+      const res = await fetch('/api/chat', {
         method: 'POST',
+        signal: AbortSignal.timeout(25000),
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${apiKey}`,
         },
         body: JSON.stringify({
-          model: 'deepseek-chat',
-          temperature: 0.5,
-          messages: [
-            { role: 'system', content: CHATBOT_SYSTEM_PROMPT },
-            ...next.map((m) => ({ role: m.role, content: m.content })),
-          ],
+          messages: next.filter((m) => m !== GREETING).slice(-5)
+            .map((m) => ({ role: m.role, content: m.content.slice(0, 1000) })),
         }),
       })
       if (!res.ok) throw new Error(`Request failed: ${res.status}`)
       const data = await res.json()
-      const reply =
-        data?.choices?.[0]?.message?.content?.trim() ||
-        "Sorry, I couldn't generate a response just now."
+      const reply = data?.reply?.trim()
+      if (!reply) throw new Error('Empty reply')
+      setReplyMode(data.mode === 'ai' ? 'AI reply' : 'Saved information')
       setMessages((prev) => [...prev, { role: 'assistant', content: reply }])
     } catch {
+      setReplyMode('Saved information')
       setMessages((prev) => [
         ...prev,
         {
           role: 'assistant',
-          content:
-            'Something went wrong reaching the assistant. Please try again, or email smit.merchant@gmail.com.',
+          content: portfolioAnswer(content),
         },
       ])
     } finally {
+      sendingRef.current = false
       setLoading(false)
     }
   }
@@ -114,7 +100,7 @@ export default function Chatbot() {
               <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
               <p className="text-sm font-medium text-zinc-200">Ask about Smit</p>
             </div>
-            <span className="font-mono text-[10px] uppercase tracking-wider text-zinc-600">AI</span>
+            <span className="font-mono text-[10px] uppercase tracking-wider text-zinc-600">{replyMode}</span>
           </div>
 
           <div ref={scrollRef} className="flex-1 space-y-3 overflow-y-auto px-4 py-4">
@@ -169,6 +155,8 @@ export default function Chatbot() {
             className="flex items-center gap-2 border-t border-zinc-800 p-3"
           >
             <input
+              maxLength={1000}
+              aria-label="Question about Smit"
               value={input}
               onChange={(e) => setInput(e.target.value)}
               placeholder="Type a question…"
