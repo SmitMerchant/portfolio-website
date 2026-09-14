@@ -18,8 +18,8 @@ test('keeps education context for short follow-ups without inventing a grade', (
     'how much?',
   )
   const answer = portfolioAnswer(messages)
-  assert.match(answer, /overall Master's grade is not listed/)
-  assert.match(answer, /89\.4%.*model accuracy, not his degree grade/)
+  assert.match(answer, /exact Master's grade isn't published/)
+  assert.match(answer, /89\.4%.*model accuracy rather than his degree result/)
 })
 
 test('keeps context through a punctuation-only follow-up', () => {
@@ -30,7 +30,7 @@ test('keeps context through a punctuation-only follow-up', () => {
     'That result is not listed.',
     '?',
   )
-  assert.match(portfolioAnswer(messages), /overall Master's grade is not listed/)
+  assert.match(portfolioAnswer(messages), /If you mean his Master's grade/)
 })
 
 test('protects private address and does not infer visa status', () => {
@@ -44,6 +44,26 @@ test('distinguishes a best-project question from a project list', () => {
   assert.match(list, /projects include/)
   assert.match(best, /Three strong highlights/)
   assert.notEqual(list, best)
+})
+
+test('varies repeated education follow-ups while preserving the answer', () => {
+  const first = portfolioAnswer('how much did he score in masters')
+  const followUp = portfolioAnswer(conversation(
+    'how much did he score in masters',
+    first,
+    'how much?',
+  ))
+  const punctuation = portfolioAnswer(conversation(
+    'how much did he score in masters',
+    first,
+    'how much?',
+    followUp,
+    '?',
+  ))
+  assert.match(followUp, /exact Master's grade isn't published/)
+  assert.match(punctuation, /If you mean his Master's grade/)
+  assert.notEqual(first, followUp)
+  assert.notEqual(followUp, punctuation)
 })
 
 test('gives details for a named project', () => {

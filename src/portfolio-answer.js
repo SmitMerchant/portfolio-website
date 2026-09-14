@@ -34,8 +34,7 @@ function projectsAnswer(text) {
   if (named) return `${named.title}: ${named.blurb} Technologies: ${named.tech.join(', ')}.`
 
   if (/\b(best|top|strongest|featured|highlight)\b/.test(text)) {
-    const featured = PROJECTS.filter((project) => project.featured)
-    return `Three strong highlights are ${featured.map((project) => `${project.title} — ${project.blurb}`).join(' ')} The best one to discuss depends on whether the role focuses on full-stack products, applied NLP, or computer vision.`
+    return "Three strong highlights are LeadGen Pro, a full-stack AI sales product; Smart Search for Research Expert Connections, an applied NLP and researcher-matching project; and his surveillance dissertation, which achieved 89.4% model accuracy at 31 FPS. The best one to discuss depends on whether the role focuses on product engineering, NLP or computer vision."
   }
 
   return `Smit's projects include ${PROJECTS.map((project) => project.title).join(', ')}. Tell me which one interests you and I can give you its purpose and technology stack.`
@@ -82,7 +81,15 @@ export function portfolioAnswer(input) {
   if (topic === 'address') {
     return `The portfolio only publishes Smit's location as ${PROFILE.location}; it does not publish a private street address. ${CONTACT}`
   }
-  if (topic === 'education') return educationAnswer(contextualText)
+  if (topic === 'education') {
+    if (!currentTopic && /^[?!.\s]*$/.test(current)) {
+      return "If you mean his Master's grade: it isn't published. The 89.4% on the site is model accuracy, not a degree score."
+    }
+    if (!currentTopic && /\bhow much\b/.test(current)) {
+      return "The exact Master's grade isn't published. The only percentage listed is 89.4%, which is dissertation model accuracy rather than his degree result."
+    }
+    return educationAnswer(contextualText)
+  }
   if (topic === 'projects') return projectsAnswer(contextualText)
   if (topic === 'skills') return skillsAnswer()
   if (topic === 'experience') return experienceAnswer(contextualText)
