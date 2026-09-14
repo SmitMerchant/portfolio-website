@@ -11,7 +11,7 @@ const SUGGESTIONS = [
 const GREETING = {
   role: 'assistant',
   content:
-    "Hi — ask me about Smit's experience, projects or skills. I can share saved portfolio information when AI replies are unavailable.",
+    "Hi — I can help with Smit's experience, projects, skills, education and public contact details. What would you like to know?",
 }
 
 export default function Chatbot() {
@@ -54,15 +54,15 @@ export default function Chatbot() {
       const data = await res.json()
       const reply = data?.reply?.trim()
       if (!reply) throw new Error('Empty reply')
-      setReplyMode(data.mode === 'ai' ? 'AI reply' : 'Saved information')
+      setReplyMode(data.mode === 'ai' ? 'AI reply' : 'Portfolio guide')
       setMessages((prev) => [...prev, { role: 'assistant', content: reply }])
     } catch {
-      setReplyMode('Saved information')
+      setReplyMode('Portfolio guide')
       setMessages((prev) => [
         ...prev,
         {
           role: 'assistant',
-          content: portfolioAnswer(content),
+          content: portfolioAnswer(next),
         },
       ])
     } finally {

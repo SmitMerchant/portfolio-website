@@ -47,7 +47,7 @@ export function createChatHandler({ env = process.env, fetchImpl = fetch, now = 
     const question = messages.at(-1).content
     const fallback = (reason) => {
       log(JSON.stringify({ event: 'portfolio_chat_fallback', reason }))
-      return res.status(200).json({ mode: 'saved', reply: portfolioAnswer(question) })
+      return res.status(200).json({ mode: 'saved', reply: portfolioAnswer(messages) })
     }
     // Deliberately opt-in. Never reuse the previously public VITE_ key.
     if (env.CHAT_ENABLED !== 'true' || !env.DEEPSEEK_API_KEY || !env.UPSTASH_REDIS_REST_URL ||
