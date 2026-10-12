@@ -55,6 +55,19 @@ export const EXPERIENCE = [
     ],
     tech: ['Python', 'FastAPI', 'Selenium', 'AWS Bedrock', 'Anthropic Claude', 'Next.js', 'React', 'Tailwind', 'GSAP', 'Three.js'],
   },
+  {
+    role: 'Software Development Engineer II',
+    company: 'The Boring Education',
+    date: 'November 2020 to March 2025',
+    points: [
+      'Joined as an entry-level developer in November 2020, progressed to Software Development Engineer I in March 2021 and Software Development Engineer II in May 2022.',
+      'Developed and maintained C# and ASP.NET Core applications, using ASP.NET Core 8 later in the role and Visual Studio for development.',
+      'Built Razor Pages, registration forms and REST API endpoints for course information, student profiles and enrolments.',
+      'Used SQL Server, Entity Framework and LINQ to manage student and course data, including dashboards showing enrolled courses and progress with user-specific access.',
+      'Investigated application faults using logs, corrected validation and null-handling issues, and tested successful and unsuccessful requests. Collaborated through Git branches, pull requests and code reviews, and documented local setup.',
+    ],
+    tech: ['C#', 'ASP.NET Core 8', 'Razor Pages', 'REST APIs', 'SQL Server', 'Entity Framework', 'LINQ', 'Visual Studio', 'Git'],
+  },
 ]
 
 export const PROJECTS = [

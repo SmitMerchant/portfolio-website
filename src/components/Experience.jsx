@@ -4,6 +4,7 @@ import Logomark from './Logomark'
 
 const COMPANY_LOGOS = {
   Adtecher: { file: 'adtecher.jpg', monogram: 'AD' },
+  'The Boring Education': { monogram: 'BE' },
 }
 
 export default function Experience() {
@@ -25,7 +26,7 @@ export default function Experience() {
                     <div>
                       <h3 className="text-base font-medium text-zinc-100">{job.role}</h3>
                       <p className="text-sm text-zinc-400">
-                        {job.company} &middot; {job.location}
+                        {job.company}{job.location && <> &middot; {job.location}</>}
                       </p>
                     </div>
                     <span className="shrink-0 font-mono text-xs text-zinc-500">{job.date}</span>
