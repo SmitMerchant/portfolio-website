@@ -4,7 +4,6 @@ import Logomark from './Logomark'
 
 const COMPANY_LOGOS = {
   Adtecher: { file: 'adtecher.jpg', monogram: 'AD' },
-  'The Boring Education': { monogram: 'BE' },
 }
 
 export default function Experience() {
